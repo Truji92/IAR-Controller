@@ -6,13 +6,13 @@ import giovynet.serial.Parameters;
 /**
  * Interfaz de comunicación con el puerto serie
  */
-public class SerialPort {
+public class SerialPortController {
 
     private Com conection;
 
     private final char comandoEscritura =  0x55;
 
-    public SerialPort() {
+    public SerialPortController() {
         try {
             Parameters params = new Parameters();
             params.setPort("COM3");
