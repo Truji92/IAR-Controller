@@ -1,6 +1,8 @@
 package main;
 
 import giovynet.nativelink.SerialPort;
+import serialPort.SerialPortController;
+
 import java.util.List;
 
 
@@ -9,7 +11,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args)throws Exception {
-        // SerialPort: es un objeto del tipo de puerto que vamos a utilizar
+        // SerialPortController: es un objeto del tipo de puerto que vamos a utilizar
         SerialPort free = new SerialPort();
 
         // Nos permite obtener la lista de puertos disponibles
@@ -21,6 +23,14 @@ public class Main {
         for (String String : portsList)
         {
             System.out.println(String );
+        }
+
+        // Ejemplo de uso la interfaz de envio recepcion
+        SerialPortController serial = new SerialPortController();
+        serial.send('a', 'b', new char[]{'1','2'});
+        while (true) {
+            // Si conectas COM3 a un hyperterminal, lo que escribas aparecera en la consola
+            System.out.println(serial.read());
         }
     }
 
