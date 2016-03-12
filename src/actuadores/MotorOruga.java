@@ -19,8 +19,15 @@ public class MotorOruga {
     }
 
     public void forward() {
-        serial.send(direccion,modo,new char[]{0x01});
+        serial.send(direccion,modo,new char[]{0x02});
+        if (serial.read() == 0x00) return;
+
         serial.send(direccion,velocidad,new char[]{0x8F});
+        if (serial.read() == 0x00) return;
+
         serial.send(direccion,giro,new char[]{0x80});
+        if (serial.read() == 0x00) return;
     }
+
+
 }
