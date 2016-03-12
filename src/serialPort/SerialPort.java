@@ -1,4 +1,4 @@
-package serialPorl;
+package serialPort;
 
 import giovynet.serial.Com;
 import giovynet.serial.Parameters;
