@@ -15,6 +15,6 @@ public class Brujula {
     }
 
     public void read(){
-        this.rumbo = serial.read();
+        rumbo = serial.read();
     }
 }
