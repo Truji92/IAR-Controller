@@ -8,10 +8,16 @@ import giovynet.serial.Parameters;
  */
 public class SerialPortController {
 
+    /**
+     * Conexion con el puerto serie
+     */
     private Com conection;
 
     private final char comandoEscritura =  0x55;
 
+    /**
+     * Inicializa por defecto a COM3
+     */
     public SerialPortController() {
         try {
             Parameters params = new Parameters();
@@ -23,6 +29,13 @@ public class SerialPortController {
         }
     }
 
+    /**
+     * Envio de información a los dispositivos
+     *
+     * @param direccion Dirección del dispositivo al que enviar
+     * @param registro Número de registro del dispositivo
+     * @param comandos Comandos a enviar
+     */
     public void send(char direccion, char registro, char[] comandos) {
         try {
             char[] msg = new char[comandos.length+4];
@@ -40,6 +53,26 @@ public class SerialPortController {
         }
     }
 
+    /**
+     * Solicita al bus una lectura, los datos leidos deben obtenerse con el metodo read()
+     *
+     * @param direccion Dirección del dispositivo
+     * @param registro Registro de inicio de la lectura
+     * @param cantidadALeer Número de registros a leer
+     */
+    public void send(char direccion, char registro, int cantidadALeer) {
+        try {
+            conection.sendArrayChar(new char[]{comandoEscritura, direccion, registro, (char)cantidadALeer});
+        } catch (Exception e) {
+            System.out.println("Error al enviar al puerto serie");
+        }
+    }
+
+    /**
+     * Lee el contenido del bus
+     *
+     * @return Byte leido del bus
+     */
     public char read() {
         char res = ' ';
         try {
@@ -49,6 +82,18 @@ public class SerialPortController {
             e.printStackTrace();
         }
         return res;
+    }
+
+    /**
+     * Realiza una petición de lectura de un registro y devuelve el valor leido
+     *
+     * @param direccion Dirección del dispositivo
+     * @param registro Número del registro a leer
+     * @return Valor del registro
+     */
+    public char readByte(char direccion, char registro) {
+        send(direccion, registro, 1);
+        return read();
     }
 
 }
