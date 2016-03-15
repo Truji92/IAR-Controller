@@ -37,6 +37,10 @@ public class MotorOruga {
         motorAction((byte) 0x00, (byte) 0xFF);
     }
 
+    public void stop() {
+        motorAction((byte) 0x80, (byte) 0x80);
+    }
+
     public void motorAction(byte rueda1, byte rueda2) {
         serial.send(direccion,velocidad,new char[]{(char) rueda1});
         waitConfirmation();
