@@ -42,6 +42,7 @@ public class Main {
             medidas[i] = sensores[i].medir(); //Acción bloqueante e.e
             System.out.println(medidas[i]);
         }
+
     }
 
 }

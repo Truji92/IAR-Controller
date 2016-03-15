@@ -11,7 +11,7 @@ public class SRF {
      * Direcciones de los sensores
      * @TODO No se si son las correctas
      */
-    public static char[] SENSORS = new char[]{0xE0,0xE2,0xE4,0xE6,0xE8};
+    public static final char[] SENSORS = new char[]{0xE0,0xE2,0xE4,0xE6,0xE8};
 
     /**
      * Devuelve un Array con los 5 sensores inicializados
@@ -40,7 +40,7 @@ public class SRF {
     /**
      * Comando para inicial una medida en cm
      */
-    private char medirEncm = 0x51;
+    private static final char medirEncm = 0x51;
 
     /**
      *
