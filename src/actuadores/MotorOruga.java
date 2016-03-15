@@ -22,31 +22,32 @@ public class MotorOruga {
     }
 
     public void goForward() {
-        motorAction((byte) 0xFF, (byte) 0xFF);
+        motorAction((char) 0xFF, (char) 0xFF);
     }
 
     public void goBackward() {
-        motorAction((byte) 0x00, (byte) 0x00);
+        motorAction((char) 0x00, (char) 0x00);
     }
 
     public void spinClockwise() {
-        motorAction((byte) 0xFF, (byte) 0x00);
+        motorAction((char) 0xFF, (char) 0x00);
     }
 
     public void spinCounterClockwise() {
-        motorAction((byte) 0x00, (byte) 0xFF);
+        motorAction((char) 0x00, (char) 0xFF);
     }
 
     public void stop() {
-        motorAction((byte) 0x80, (byte) 0x80);
+        motorAction((char) 0x80, (char) 0x80);
     }
 
-    public void motorAction(byte rueda1, byte rueda2) {
-        serial.send(direccion,velocidad,new char[]{(char) rueda1});
-        waitConfirmation();
+    public void motorAction(char rueda1, char rueda2) {
+        //serial.send(direccion,modo,new char[]{(char) 0x00, (char)128, (char) 128});
+        serial.send(direccion, velocidad, new char[]{rueda1});
+        //waitConfirmation();
 
-        serial.send(direccion,giro,new char[]{(char) rueda2});
-        waitConfirmation();
+        serial.send(direccion,giro,new char[]{rueda2});
+        //waitConfirmation();
     }
 
     private void waitConfirmation() {
