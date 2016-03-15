@@ -51,7 +51,7 @@ public class MotorOruga {
 
     private void waitConfirmation() {
         try {
-           if (serial.read() == 0x00) throw new SensorException;
+           if (serial.read() == 0x00) throw new SensorException();
         } catch (SensorException e) {
             System.out.println("Fallo al escribir/leer un sensor: " + e.getStackTrace());
         }
