@@ -1,5 +1,6 @@
 package serialPort;
 
+import giovynet.serial.Baud;
 import giovynet.serial.Com;
 import giovynet.serial.Parameters;
 
@@ -22,6 +23,8 @@ public class SerialPortController {
         try {
             Parameters params = new Parameters();
             params.setPort("COM3");
+            params.setBaudRate(Baud._19200);
+            params.setStopBits("2");
             conection = new Com(params);
         } catch (Exception e) {
             System.out.println("Error al inicializar el puerto");
