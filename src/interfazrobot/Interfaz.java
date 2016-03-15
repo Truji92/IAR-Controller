@@ -5,6 +5,8 @@
  */
 package interfazrobot;
 
+import sensores.SRF;
+
 /**
  *
  * @author jesus
@@ -14,9 +16,11 @@ public class Interfaz extends javax.swing.JFrame {
     /**
      * Creates new form Interfaz
      */
+   SRF[] sensores;
     
     public Interfaz() {
         setTitle("Funcionamiento de Sensores");
+        sensores = SRF.initializeSensors(serial);
         initComponents();
     }
 
@@ -46,16 +50,15 @@ public class Interfaz extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         canvas1 = new java.awt.Canvas();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
+        sensor1 = new javax.swing.JTextField();
+        sensor2 = new javax.swing.JTextField();
+        sensor3 = new javax.swing.JTextField();
+        sensor4 = new javax.swing.JTextField();
+        sensor5 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
-        jTextField11 = new javax.swing.JTextField();
+        dMax = new javax.swing.JTextField();
+        dMin = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -81,6 +84,11 @@ public class Interfaz extends javax.swing.JFrame {
         });
 
         scaner.setText("Scaner");
+        scaner.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scanerActionPerformed(evt);
+            }
+        });
 
         limpiar.setText("Limpiar");
         limpiar.addActionListener(new java.awt.event.ActionListener() {
@@ -90,6 +98,11 @@ public class Interfaz extends javax.swing.JFrame {
         });
 
         scanLimpiar.setText("Scaner/Limpiar");
+        scanLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scanLimpiarActionPerformed(evt);
+            }
+        });
 
         nuevaDir.setText("Cambiar direccion");
 
@@ -105,56 +118,63 @@ public class Interfaz extends javax.swing.JFrame {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel3.setText("0                36                72               108               144               180");
+        jLabel3.setText("0                    45                    90                   135                   180");
 
-        jTextField3.setEditable(false);
-        jTextField3.setToolTipText("");
-        jTextField3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        sensor1.setEditable(false);
+        sensor1.setToolTipText("");
+        sensor1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        sensor1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                sensor1ActionPerformed(evt);
             }
         });
 
-        jTextField4.setEditable(false);
-        jTextField4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        sensor2.setEditable(false);
+        sensor2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jTextField5.setEditable(false);
-        jTextField5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        sensor3.setEditable(false);
+        sensor3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        sensor3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sensor3ActionPerformed(evt);
+            }
+        });
 
-        jTextField6.setEditable(false);
-        jTextField6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        sensor4.setEditable(false);
+        sensor4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jTextField7.setEditable(false);
-        jTextField7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        jTextField8.setEditable(false);
-        jTextField8.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jTextField8.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        sensor5.setEditable(false);
+        sensor5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        sensor5.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        sensor5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sensor5ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Distancia Máxima:");
 
         jLabel5.setText("Distancia Mínima:");
 
-        jTextField9.setEditable(false);
-        jTextField9.setAutoscrolls(false);
-        jTextField9.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jTextField9.setCaretColor(new java.awt.Color(238, 238, 238));
-        jTextField9.setDisabledTextColor(new java.awt.Color(238, 238, 238));
-        jTextField9.addActionListener(new java.awt.event.ActionListener() {
+        dMax.setEditable(false);
+        dMax.setAutoscrolls(false);
+        dMax.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        dMax.setCaretColor(new java.awt.Color(238, 238, 238));
+        dMax.setDisabledTextColor(new java.awt.Color(238, 238, 238));
+        dMax.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField9ActionPerformed(evt);
+                dMaxActionPerformed(evt);
             }
         });
 
-        jTextField11.setEditable(false);
-        jTextField11.setAutoscrolls(false);
-        jTextField11.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jTextField11.setCaretColor(new java.awt.Color(238, 238, 238));
-        jTextField11.setDisabledTextColor(new java.awt.Color(238, 238, 238));
-        jTextField11.addActionListener(new java.awt.event.ActionListener() {
+        dMin.setEditable(false);
+        dMin.setAutoscrolls(false);
+        dMin.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        dMin.setCaretColor(new java.awt.Color(238, 238, 238));
+        dMin.setDisabledTextColor(new java.awt.Color(238, 238, 238));
+        dMin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField11ActionPerformed(evt);
+                dMinActionPerformed(evt);
             }
         });
 
@@ -191,33 +211,35 @@ public class Interfaz extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)
-                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(35, 35, 35)
-                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(43, 43, 43)
-                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(39, 39, 39)
-                                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(jLabel3))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(19, 19, 19)
+                                        .addComponent(sensor1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(42, 42, 42)
+                                        .addComponent(sensor2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(55, 55, 55)
+                                        .addComponent(sensor3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(54, 54, 54)
+                                        .addComponent(sensor4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(57, 57, 57)
+                                        .addComponent(sensor5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(14, 14, 14)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(dMax)
+                                            .addComponent(dMin)))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField9)
-                                    .addComponent(jTextField11)))))
+                                .addComponent(jLabel3)
+                                .addGap(27, 27, 27))))
                     .addComponent(jLabel6))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
@@ -260,20 +282,19 @@ public class Interfaz extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(sensor1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sensor2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sensor4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sensor5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sensor3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(dMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(dMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -302,6 +323,11 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarActionPerformed
         // TODO add your handling code here:
+        sensor1.setText("");
+        sensor2.setText("");
+        sensor3.setText("");
+        sensor4.setText("");
+        sensor5.setText("");
         
     }//GEN-LAST:event_limpiarActionPerformed
 
@@ -309,18 +335,58 @@ public class Interfaz extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
-    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
+    private void dMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dMaxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField9ActionPerformed
+    }//GEN-LAST:event_dMaxActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void sensor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sensor1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_sensor1ActionPerformed
 
-    private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
+    private void dMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dMinActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField11ActionPerformed
+    }//GEN-LAST:event_dMinActionPerformed
 
+    private void sensor3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sensor3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sensor3ActionPerformed
+
+    private void scanerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanerActionPerformed
+        // TODO add your handling code here:
+        int[] medidas = new int[sensores.length];
+        for (int i = 0; i < sensores.length; i++) 
+        {
+            medidas[i] = sensores[i].medir();
+        }
+        sensor1.setText(""+medidas[0]);
+        sensor2.setText(""+medidas[1]);
+        sensor3.setText(""+medidas[2]);
+        sensor4.setText(""+medidas[3]);
+        sensor5.setText(""+medidas[4]);
+        
+        int max = medidas[0],
+                min = medidas[0];
+        for(int i = 1; i < sensores.length; i++)
+        {
+            max = Integer.max(max, medidas[i]);
+            min = Integer.min(min, medidas[i]);
+        }
+        
+        dMax.setText("" + max);
+        dMin.setText("" + min);
+    }//GEN-LAST:event_scanerActionPerformed
+
+    private void sensor5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sensor5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sensor5ActionPerformed
+
+    private void scanLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanLimpiarActionPerformed
+        // TODO add your handling code here:
+        limpiarActionPerformed(evt);
+        scanerActionPerformed(evt);
+        
+    }//GEN-LAST:event_scanLimpiarActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -359,6 +425,8 @@ public class Interfaz extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup2;
     private java.awt.Canvas canvas1;
+    private javax.swing.JTextField dMax;
+    private javax.swing.JTextField dMin;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -372,18 +440,15 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
     private javax.swing.JButton limpiar;
     private javax.swing.JButton nuevaDir;
     private javax.swing.JButton scanLimpiar;
     private javax.swing.JButton scaner;
+    private javax.swing.JTextField sensor1;
+    private javax.swing.JTextField sensor2;
+    private javax.swing.JTextField sensor3;
+    private javax.swing.JTextField sensor4;
+    private javax.swing.JTextField sensor5;
     // End of variables declaration//GEN-END:variables
 }
