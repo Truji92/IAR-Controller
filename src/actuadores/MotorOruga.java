@@ -37,6 +37,10 @@ public class MotorOruga {
         motorAction((byte) 0x00, (byte) 0xFF);
     }
 
+    public void stop() {
+        motorAction((byte) 0x80, (byte) 0x80);
+    }
+
     public void motorAction(byte rueda1, byte rueda2) {
         serial.send(direccion,velocidad,new char[]{(char) rueda1});
         waitConfirmation();
@@ -47,7 +51,7 @@ public class MotorOruga {
 
     private void waitConfirmation() {
         try {
-           if (serial.read() == 0x00) throw new SensorException;
+           if (serial.read() == 0x00) throw new SensorException();
         } catch (SensorException e) {
             System.out.println("Fallo al escribir/leer un sensor: " + e.getStackTrace());
         }
