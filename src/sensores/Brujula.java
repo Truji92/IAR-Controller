@@ -14,7 +14,13 @@ public class Brujula {
         this.serial = serial;
     }
 
-    public void read(){
-        rumbo = serial.read();
+    /**
+     * Devuelve la medida en grados (0 - 360)
+     *
+     * @return Grados medidos por la brujula
+     */
+    public int read(){
+        char medida = serial.readByte(direccion, rumbo);
+        return (int)medida*360/255;
     }
 }
