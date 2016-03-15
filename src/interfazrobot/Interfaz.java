@@ -6,6 +6,7 @@
 package interfazrobot;
 
 import sensores.SRF;
+import serialPort.SerialPortController;
 
 /**
  *
@@ -20,6 +21,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     public Interfaz() {
         setTitle("Funcionamiento de Sensores");
+        SerialPortController serial = new SerialPortController();
         sensores = SRF.initializeSensors(serial);
         initComponents();
     }
