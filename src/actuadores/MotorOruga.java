@@ -9,7 +9,7 @@ import serialPort.SerialPortController;
 public class MotorOruga {
 
     private SerialPortController serial;
-    static private char direccion = 0xB1;
+    static private char direccion = 0xB0;
     static private char modo = 0x00;
     static private char velocidad = 0x01;
     static private char giro = 0x02;

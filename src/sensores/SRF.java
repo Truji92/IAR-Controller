@@ -11,7 +11,7 @@ public class SRF {
      * Direcciones de los sensores
      * @TODO No se si son las correctas
      */
-    public static final char[] SENSORS = new char[]{0xE0,0xE2,0xE4,0xE6,0xE8};
+    public static final char[] SENSORS = new char[]{0xE1,0xE3,0xE5,0xE7,0xE9};
 
     /**
      * Devuelve un Array con los 5 sensores inicializados

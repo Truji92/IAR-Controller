@@ -7,7 +7,7 @@ import serialPort.SerialPortController;
  */
 public class Brujula {
     private SerialPortController serial;
-    static private final char direccion = 0xC0;
+    static private final char direccion = 0xC1;
     static private final char rumbo = 0x01;
 
     public Brujula(SerialPortController serial) {
