@@ -1,5 +1,6 @@
 package actuadores;
 
+import excepciones.SensorException;
 import serialPort.SerialPortController;
 
 /**
@@ -16,6 +17,8 @@ public class MotorOruga {
 
     public MotorOruga(SerialPortController serial) {
         this.serial = serial;
+        serial.send(direccion,modo,new char[]{0x00});
+        waitConfirmation();
     }
 
     public void goForward() {
@@ -35,17 +38,18 @@ public class MotorOruga {
     }
 
     public void motorAction(byte rueda1, byte rueda2) {
-         serial.send(direccion,modo,new char[]{0x00});
-        if (serial.read() == 0x00) return;
-
         serial.send(direccion,velocidad,new char[]{(char) rueda1});
-        if (serial.read() == 0x00) return;
+        waitConfirmation();
 
         serial.send(direccion,giro,new char[]{(char) rueda2});
-        if (serial.read() == 0x00) return;
+        waitConfirmation();
     }
 
-
-
-
+    private void waitConfirmation() {
+        try {
+           if (serial.read() == 0x00) throw new SensorException;
+        } catch (SensorException e) {
+            System.out.println("Fallo al escribir/leer un sensor: " + e.getStackTrace());
+        }
+    }
 }
