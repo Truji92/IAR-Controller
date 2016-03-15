@@ -61,7 +61,7 @@ public class SRF {
         serialPort.send(direccion, (char)0x00, new char[]{medirEncm});
 
         try{
-            Thread.sleep(750);
+            Thread.sleep(75);
         } catch (InterruptedException e) {
             System.out.println("Error esperando a la medida");
         }
