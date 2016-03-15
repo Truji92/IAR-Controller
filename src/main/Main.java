@@ -43,6 +43,9 @@ public class Main {
 
 
         while (seguir) {
+            
+            System.out.println("BURJULA");
+            System.out.println(brujula.read());
 
             System.out.println("GIRANDO SENTIDO HORARIO");
             ruedas.spinClockwise();
