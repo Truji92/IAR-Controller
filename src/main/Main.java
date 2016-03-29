@@ -28,22 +28,36 @@ public class Main {
 //
 //
 //        //test sensores
-//        SRF[] sensores = SRF.initializeSensors(serial);
-//        int[] medidas = new int[sensores.length];
+        SRF[] sensores = SRF.initializeSensors(serial);
+        short[] medidas = new short[sensores.length];
 //        for (int i = 0; i < sensores.length; i++) {
 //            medidas[i] = sensores[i].medir(); //Acción bloqueante e.e
 //            System.out.println(medidas[i]);
 //        }
 
+        /*while(true){
+            int mdid = sensores[3].medir();
+            System.out.println(mdid);
+        }*/
+        
+        //serial.send((char)0xC1, (char) 0x22, new char[]{0x20});
+        //serial.send((char)0xC1, (char) 0x22, new char[]{0x2A});
+        //serial.send((char)0xC1, (char) 0x22, new char[]{0x60});
+        
         Brujula brujula = new Brujula(serial);
         MotorOruga ruedas = new MotorOruga(serial);
+        
+        while(true){
+            float bruj = brujula.read();
+            System.out.println(bruj);
+        }
 
-        Scanner teclado = new Scanner(System.in);
+       /* Scanner teclado = new Scanner(System.in);
         boolean seguir = true;
 
 
         while (seguir) {
-            
+
             System.out.println("BURJULA");
             System.out.println(brujula.read());
 
@@ -71,7 +85,7 @@ public class Main {
             System.out.println(next);
             if (next.compareTo("stop") == 0) seguir = false;
             teclado.reset();
-        }
+        }*/
     }
 
 }

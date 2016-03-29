@@ -19,8 +19,15 @@ public class Brujula {
      *
      * @return Grados medidos por la brujula
      */
-    public int read(){
+    public float read(){
         char medida = serial.readByte(direccion, rumbo);
-        return (int)medida*360/255;
+        
+        char alto = serial.readByte(direccion, (char)0x02);
+        char bajo = serial.readByte(direccion, (char)0x03);
+        
+        float res = (int) (alto*256 + bajo) & 0xFF;
+        
+        return ((int)medida  & 0xFF) * 360.0f/255.0f;
+        //return res / 10f ;
     }
 }

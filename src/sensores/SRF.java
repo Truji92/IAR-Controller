@@ -11,7 +11,7 @@ public class SRF {
      * Direcciones de los sensores
      * @TODO No se si son las correctas
      */
-    public static final char[] SENSORS = new char[]{0xE1,0xE3,0xE5,0xE7,0xE9};
+    public static final char[] SENSORS = new char[]{0xE0,0xE2,0xE4,0xE6,0xE8};
 
     /**
      * Devuelve un Array con los 5 sensores inicializados
@@ -59,9 +59,10 @@ public class SRF {
      */
     public int medir() {
         serialPort.send(direccion, (char)0x00, new char[]{medirEncm});
-
+        serialPort.read();
+        
         try{
-            Thread.sleep(75);
+            Thread.sleep(90);
         } catch (InterruptedException e) {
             System.out.println("Error esperando a la medida");
         }
@@ -69,6 +70,7 @@ public class SRF {
         char bitAlto = serialPort.readByte((char) (direccion + 1), (char) 0x02);
         char bitBajo = serialPort.readByte((char) (direccion + 1), (char) 0x03);
 
-        return (bitAlto << 8) + bitBajo;
+        //return (bitAlto << 8) + bitBajo;
+        return (int) bitBajo & 0xFF;
     }
 }

@@ -50,6 +50,7 @@ public class SerialPortController {
             System.arraycopy(comandos, 0, msg, 4, comandos.length);
 
             conection.sendArrayChar(msg);
+
         } catch (Exception e) {
             System.out.println("Error al enviar al puerto serie");
             e.printStackTrace();
