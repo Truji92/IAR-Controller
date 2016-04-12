@@ -30,28 +30,28 @@ public class MotorOruga {
      * Avanzar en línea recta
      */
     public void goForward() {
-        motorAction((char) 0xFF, (char) 0xFF);
+        motorAction((char) 0x00, (char) 0xFF);
     }
 
     /**
      * Retroceder en línea recta
      */
     public void goBackward() {
-        motorAction((char) 0x00, (char) 0x00);
+        motorAction((char) 0xFF, (char) 0x00);
     }
 
     /**
      * Girar en el sentido de las agujas del reloj
      */
     public void spinClockwise() {
-        motorAction((char) 0xFF, (char) 0x00);
+        motorAction((char) 0x00, (char) 0x00);
     }
 
     /**
      * Girar en el sentido contrario a las agujas del reloj
      */
     public void spinCounterClockwise() {
-        motorAction((char) 0x00, (char) 0xFF);
+        motorAction((char) 0xFF, (char) 0xFF);
     }
 
     /**

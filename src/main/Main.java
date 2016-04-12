@@ -44,22 +44,16 @@ public class Main {
         //serial.send((char)0xC1, (char) 0x22, new char[]{0x2A});
         //serial.send((char)0xC1, (char) 0x22, new char[]{0x60});
         
-        Brujula brujula = new Brujula(serial);
+        //Brujula brujula = new Brujula(serial);
         MotorOruga ruedas = new MotorOruga(serial);
         
-        while(true){
-            float bruj = brujula.read();
-            System.out.println(bruj);
-        }
+       
 
-       /* Scanner teclado = new Scanner(System.in);
+       Scanner teclado = new Scanner(System.in);
         boolean seguir = true;
 
 
         while (seguir) {
-
-            System.out.println("BURJULA");
-            System.out.println(brujula.read());
 
             System.out.println("GIRANDO SENTIDO HORARIO");
             ruedas.spinClockwise();
@@ -85,7 +79,7 @@ public class Main {
             System.out.println(next);
             if (next.compareTo("stop") == 0) seguir = false;
             teclado.reset();
-        }*/
+        }
     }
 
 }
