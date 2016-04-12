@@ -29,14 +29,14 @@ public class MotorOruga {
         waitConfirmation();
     }
 
-    public setVelocity(float vx, float vy) {
-        float motorL = velocidadXMax * vx;
-        float motorR = velocidadXMax * vx;
+    public void setVelocity(float vx, float vy) {
+        float motorL = 128 + velocidadXMax * vx;
+        float motorR = 128 + velocidadXMax * vx;
         if(vy > 0) {
             motorR -= velocidadYMax * vy;
         }
 
-        motorAction(motorL, motorR);
+        motorAction((char) motorL, (char) motorR);
     }
 
     /**
