@@ -14,6 +14,9 @@ public class MotorOruga {
     static private char velocidad = 0x01;
     static private char giro = 0x02;
 
+    private final int velocidadXMax = 100;
+    private final int velocidadYMax = 50;
+
 
     /**
      * Inicializa por defecto con el modo 1 del controlador para las ruedas
@@ -24,6 +27,16 @@ public class MotorOruga {
         this.serial = serial;
         serial.send(direccion,modo,new char[]{0x00});
         waitConfirmation();
+    }
+
+    public setVelocity(float vx, float vy) {
+        float motorL = velocidadXMax * vx;
+        float motorR = velocidadXMax * vx;
+        if(vy > 0) {
+            motorR -= velocidadYMax * vy;
+        }
+
+        motorAction(motorL, motorR);
     }
 
     /**
