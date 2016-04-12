@@ -33,9 +33,12 @@ public class MotorOruga {
         float motorL = 128 + velocidadXMax * vx;
         float motorR = 128 + velocidadXMax * vx;
         if(vy > 0) {
-            motorR -= velocidadYMax * vy;
+            motorR -= velocidadYMax * vy * (vx/vx);
+        } else if (vy < 0) {
+            motorL -= velocidadYMax * vy * (vx/vx);
         }
 
+        motorR = 255 - motorR;
         motorAction((char) motorL, (char) motorR);
     }
 
