@@ -11,7 +11,7 @@ public class CampoPotencial {
 
     private static final int MAX_DIST = 100;
 
-    private static final float sqrt2 = (float) Math.sqrt(2);
+    private static final float sqrt2 = (float) Math.sqrt(2)/2;
 
     private static final float[][] sensor_directions = new float[][] {
             new float[] {-1, 0},        // izquierda
@@ -32,16 +32,16 @@ public class CampoPotencial {
             distancias[i] = medida;
         }
 
-        return calcWheelsSpeed(distancias);
+        return enviromentVector(distancias);
     }
 
-    private static float[] calcWheelsSpeed(int[] distancias) {
+    private static float[] enviromentVector(int[] distancias) {
 
         float[][] normalized_directions =  new float[5][];
         float[] normalized_dist = new float[5];
 
         for (int i = 0; i < distancias.length; i++) {
-            normalized_dist[i] = (distancias[i] <= MAX_DIST ? (float)distancias[i] : 0) / MAX_DIST;
+            normalized_dist[i] = (distancias[i] <= MAX_DIST ? (float)distancias[i] : MAX_DIST) / MAX_DIST;
 
             float[] direction_unitary = sensor_directions[i];
 
@@ -52,15 +52,20 @@ public class CampoPotencial {
 
         }
 
-        return reduce_vectors(normalized_directions);
+        float[] push_vector = reduce_vectors(normalized_directions);
+        float dir = push_vector[0];
+
+        push_vector[0] =  - Math.signum(dir) * (1 - Math.abs(dir));
+        push_vector[1] =  push_vector[1]; // velocidad directamente proporcional a la distancia frontal (mas lejos mas rapido)
+        return push_vector;
     }
 
     private static float[] reduce_vectors(float[][] vectors) {
         float [] result = new float[] {0,0};
 
         for (float[] vector : vectors) {
-            result[0] -= vector[0];
-            result[1] -= vector[1];
+            result[0] += vector[0];
+            result[1] += vector[1];
         }
 
         return result;
@@ -135,30 +140,30 @@ public class CampoPotencial {
      */
     public void run()
     {
-        while(true)
-        {
-            final int[] distancias = sensores.medir();
-            double[] direccion = new double[] { 0, 0, 0};
-            for(int i = 0; i < distancias.length; i++)
-            {
-                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0], 
-                                        (double) distancias[i]*sensor_directions[i][0]};
-                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
-                direccion = combinar(direccion, evitar);
-            }
-        }
+//        while(true)
+//        {
+//            final int[] distancias = sensores.medir();
+//            double[] direccion = new double[] { 0, 0, 0};
+//            for(int i = 0; i < distancias.length; i++)
+//            {
+//                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0],
+//                                        (double) distancias[i]*sensor_directions[i][0]};
+//                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
+//                direccion = combinar(direccion, evitar);
+//            }
+//        }
     }
 
     public static void main(String[] args) {
         int[][] tests = new int [][] {
-                new int[] {0,0,0,0,0}
+                new int[] {1,1,1,100,100}
 //                new int[] {9,0,0,0,0},
 //                new int[] {0,0,9,0,0},
 //                new int[] {0,0,0,0,9}
         };
 
         for (int[] test: tests) {
-            float[] result = calcWheelsSpeed(test);
+            float[] result = enviromentVector(test);
             System.out.println("====================");
             System.out.println("dir: " + result[0] + ", vel: " + result[1] + ")");
         }
