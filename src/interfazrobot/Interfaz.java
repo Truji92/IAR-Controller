@@ -5,6 +5,8 @@
  */
 package interfazrobot;
 
+import actuadores.MotorOruga;
+import sensores.Brujula;
 import sensores.SRF;
 import serialPort.SerialPortController;
 
@@ -17,12 +19,15 @@ public class Interfaz extends javax.swing.JFrame {
     /**
      * Creates new form Interfaz
      */
-   SRF[] sensores;
-    
+    SRF[] sensores;
+    Brujula brujula;
+    MotorOruga ruedas;
+    SerialPortController serial = new SerialPortController();
     public Interfaz() {
         setTitle("Funcionamiento de Sensores");
-        SerialPortController serial = new SerialPortController();
         sensores = SRF.initializeSensors(serial);
+        brujula = new Brujula(serial);
+        ruedas = new MotorOruga(serial);
         initComponents();
     }
 
@@ -62,6 +67,12 @@ public class Interfaz extends javax.swing.JFrame {
         dMax = new javax.swing.JTextField();
         dMin = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        rumbo = new javax.swing.JButton();
+        sensor6 = new javax.swing.JTextField();
+        Backward = new javax.swing.JButton();
+        Right = new javax.swing.JButton();
+        Left = new javax.swing.JButton();
+        Forward = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -183,6 +194,44 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("DejaVu Serif", 1, 12)); // NOI18N
         jLabel6.setText("Rango:");
 
+        rumbo.setText("Rumbo");
+        rumbo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rumboActionPerformed(evt);
+            }
+        });
+
+        sensor6.setEditable(false);
+        sensor6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        Backward.setText("Backward");
+        Backward.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BackwardActionPerformed(evt);
+            }
+        });
+
+        Right.setText("Right");
+        Right.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RightActionPerformed(evt);
+            }
+        });
+
+        Left.setText("Left");
+        Left.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeftActionPerformed(evt);
+            }
+        });
+
+        Forward.setText("Forward");
+        Forward.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ForwardActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -190,6 +239,23 @@ public class Interfaz extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(rumbo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sensor6, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(205, 205, 205))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(Left)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(Backward)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Right))
+                            .addComponent(Forward)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -241,8 +307,7 @@ public class Interfaz extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)
-                                .addGap(27, 27, 27))))
-                    .addComponent(jLabel6))
+                                .addGap(27, 27, 27)))))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -297,7 +362,21 @@ public class Interfaz extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(dMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rumbo)
+                            .addComponent(sensor6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Forward))
+                        .addGap(22, 22, 22)
+                        .addComponent(Backward))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Right)
+                            .addComponent(Left))))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -311,9 +390,10 @@ public class Interfaz extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -355,11 +435,12 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void scanerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanerActionPerformed
         // TODO add your handling code here:
-        int[] medidas = new int[sensores.length];
-        for (int i = 0; i < sensores.length; i++) 
-        {
-            medidas[i] = sensores[i].medir();
+        
+        short[] medidas = new short[sensores.length];
+        for (int i = 0; i < sensores.length; i++) {
+            medidas[i] = (short) sensores[i].medir(); //Acción bloqueante e.e        }
         }
+        
         sensor1.setText(""+medidas[0]);
         sensor2.setText(""+medidas[1]);
         sensor3.setText(""+medidas[2]);
@@ -368,7 +449,7 @@ public class Interfaz extends javax.swing.JFrame {
         
         int max = medidas[0],
                 min = medidas[0];
-        for(int i = 1; i < sensores.length; i++)
+        for(int i = 1; i < medidas.length; i++)
         {
             max = Integer.max(max, medidas[i]);
             min = Integer.min(min, medidas[i]);
@@ -388,6 +469,31 @@ public class Interfaz extends javax.swing.JFrame {
         scanerActionPerformed(evt);
         
     }//GEN-LAST:event_scanLimpiarActionPerformed
+
+    private void rumboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rumboActionPerformed
+        // TODO add your handling code here:
+        sensor6.setText( "" + brujula.read() );
+    }//GEN-LAST:event_rumboActionPerformed
+
+    private void RightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RightActionPerformed
+        // TODO add your handling code here:
+        ruedas.spinClockwise();
+    }//GEN-LAST:event_RightActionPerformed
+
+    private void ForwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ForwardActionPerformed
+        // TODO add your handling code here:
+        ruedas.goForward();
+    }//GEN-LAST:event_ForwardActionPerformed
+
+    private void BackwardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackwardActionPerformed
+        // TODO add your handling code here:
+        ruedas.goBackward();
+    }//GEN-LAST:event_BackwardActionPerformed
+
+    private void LeftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeftActionPerformed
+        // TODO add your handling code here:
+        ruedas.spinCounterClockwise();
+    }//GEN-LAST:event_LeftActionPerformed
     
     /**
      * @param args the command line arguments
@@ -415,6 +521,9 @@ public class Interfaz extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Interfaz.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -425,6 +534,10 @@ public class Interfaz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Backward;
+    private javax.swing.JButton Forward;
+    private javax.swing.JButton Left;
+    private javax.swing.JButton Right;
     private javax.swing.ButtonGroup buttonGroup2;
     private java.awt.Canvas canvas1;
     private javax.swing.JTextField dMax;
@@ -445,6 +558,7 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JButton limpiar;
     private javax.swing.JButton nuevaDir;
+    private javax.swing.JButton rumbo;
     private javax.swing.JButton scanLimpiar;
     private javax.swing.JButton scaner;
     private javax.swing.JTextField sensor1;
@@ -452,5 +566,6 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JTextField sensor3;
     private javax.swing.JTextField sensor4;
     private javax.swing.JTextField sensor5;
+    private javax.swing.JTextField sensor6;
     // End of variables declaration//GEN-END:variables
 }
