@@ -14,8 +14,8 @@ public class MotorOruga {
     static private char velocidad = 0x01;
     static private char giro = 0x02;
 
-    private final int velocidadXMax = 100;
-    private final int velocidadYMax = 50;
+    private final int velocidadXMax = 20;
+    private final int velocidadYMax = 10;
 
 
     /**
@@ -38,7 +38,7 @@ public class MotorOruga {
             motorL -= velocidadYMax * vy * (vx/Math.abs(vx));
         }
 
-        motorR = 255 - motorR;
+        motorL = 255 - motorL;
         motorAction((char) motorL, (char) motorR);
     }
 
@@ -87,10 +87,10 @@ public class MotorOruga {
     public void motorAction(char rueda1, char rueda2) {
         //serial.send(direccion,modo,new char[]{(char) 0x00, (char)128, (char) 128});
         serial.send(direccion, velocidad, new char[]{rueda1});
-        //waitConfirmation();
+        waitConfirmation();
 
         serial.send(direccion,giro,new char[]{rueda2});
-        //waitConfirmation();
+        waitConfirmation();
     }
 
     /**

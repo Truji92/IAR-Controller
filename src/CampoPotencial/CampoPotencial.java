@@ -1,5 +1,6 @@
 package CampoPotencial;
 
+import actuadores.MotorOruga;
 import sensores.SRF;
 
 /**
@@ -9,7 +10,9 @@ public class CampoPotencial {
 
     private SRF[] sensores;
 
-    private static final int MAX_DIST = 100;
+    private MotorOruga motor;
+
+    private static final int MAX_DIST = 70;
 
     private static final float sqrt2 = (float) Math.sqrt(2)/2;
 
@@ -21,8 +24,9 @@ public class CampoPotencial {
             new float[] {1, 0}          // derecha
     };
 
-    public CampoPotencial(SRF[] sensores) {
+    public CampoPotencial(SRF[] sensores, MotorOruga motor) {
         this.sensores = sensores;
+        this.motor = motor;
     }
 
     public float[] tick() {
@@ -30,6 +34,7 @@ public class CampoPotencial {
         for (int i = 0; i < sensores.length; i++) {
             int medida = sensores[i].medir();
             distancias[i] = medida;
+            System.out.println("sensor " + i + ": "+ distancias[i]);
         }
 
         return enviromentVector(distancias);
@@ -41,7 +46,7 @@ public class CampoPotencial {
         float[] normalized_dist = new float[5];
 
         for (int i = 0; i < distancias.length; i++) {
-            normalized_dist[i] = (distancias[i] <= MAX_DIST ? (float)distancias[i] : MAX_DIST) / MAX_DIST;
+            normalized_dist[i] = (distancias[i] <= MAX_DIST ? (float)distancias[i] : 0) / MAX_DIST;
 
             float[] direction_unitary = sensor_directions[i];
 
@@ -55,8 +60,8 @@ public class CampoPotencial {
         float[] push_vector = reduce_vectors(normalized_directions);
         float dir = push_vector[0];
 
-        push_vector[0] =  - Math.signum(dir) * (1 - Math.abs(dir));
-        push_vector[1] =  push_vector[1]; // velocidad directamente proporcional a la distancia frontal (mas lejos mas rapido)
+        push_vector[0] =  - (dir/Math.abs(dir)) * (1 - Math.abs(dir));
+        push_vector[1] =  push_vector[1] / (1 + sqrt2*2); // velocidad directamente proporcional a la distancia frontal (mas lejos mas rapido)
         return push_vector;
     }
 
@@ -140,23 +145,37 @@ public class CampoPotencial {
      */
     public void run()
     {
-//        while(true)
-//        {
-//            final int[] distancias = sensores.medir();
-//            double[] direccion = new double[] { 0, 0, 0};
-//            for(int i = 0; i < distancias.length; i++)
-//            {
-//                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0],
-//                                        (double) distancias[i]*sensor_directions[i][0]};
-//                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
-//                direccion = combinar(direccion, evitar);
-//            }
-//        }
+        while(true)
+        {
+            /*final int[] distancias = new int[sensores.length];
+
+            double[] direccion = new double[] { 0, 0, 0};
+            for(int i = 0; i < distancias.length; i++)
+            {
+                int medida = sensores[i].medir();
+                distancias[i] = medida;
+                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0],
+                                        (double) distancias[i]*sensor_directions[i][0]};
+                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
+                direccion = combinar(direccion, evitar);
+            }
+
+            motor.setVelocity((float)direccion[2], (float)direccion[1]);*/
+            float[] action = tick();
+            if(action[1] > 1) action[1] = 1;
+            System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
+            motor.setVelocity(action[1], action[0]);
+        }
     }
 
     public static void main(String[] args) {
+//        sensor 0: 174
+//        sensor 1: 37
+//        sensor 2: 17
+//        sensor 3: 123
+//        sensor 4: 218
         int[][] tests = new int [][] {
-                new int[] {1,1,1,100,100}
+                new int[] {174,37,17,123,218}
 //                new int[] {9,0,0,0,0},
 //                new int[] {0,0,9,0,0},
 //                new int[] {0,0,0,0,9}

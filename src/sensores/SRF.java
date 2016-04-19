@@ -67,7 +67,7 @@ public class SRF {
             System.out.println("Error esperando a la medida");
         }
 
-        char bitAlto = serialPort.readByte((char) (direccion + 1), (char) 0x02);
+        //char bitAlto = serialPort.readByte((char) (direccion + 1), (char) 0x02);
         char bitBajo = serialPort.readByte((char) (direccion + 1), (char) 0x03);
 
         //return (bitAlto << 8) + bitBajo;
