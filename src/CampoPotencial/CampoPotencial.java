@@ -65,6 +65,68 @@ public class CampoPotencial {
 
         return result;
     }
+    
+    /**
+     * 
+     * Calcula la nueva direcion a tomar para llegar al objetivo
+     * 
+     * @param goal Posicion del objetivo (x, y)
+     * @param robot Posicion del robot (x, y)
+     * @return vector direcion (magnitud, x, y)
+     */
+    public double[] go2Goal(final int[] goal, final int[] robot)
+    {
+        final double distancia = Math.sqrt( Math.pow((goal[0] - robot[0]), 2) 
+                                    + Math.pow((goal[1] - robot[1]), 2) );
+        
+        final double magnitud = 5; //es una constante
+        final double x = magnitud * (goal[0] - robot[0] ) / distancia,
+                y = magnitud * (goal[0] - robot[0] ) / distancia;
+        
+        return new double[] { magnitud, x, y};
+    }
+    
+     /**
+     * 
+     * Calcula la nueva direcion a tomar para evitar el obstaculo
+     * 
+     * @param obstacle Posicion del obstaculo (x, y)
+     * @param robot Posicion del robot (x, y)
+     * @return vector direcion (magnitud, x, y)
+     */
+    public double[] avoidObstacle(final int[] obstacle, final int[] robot)
+    {
+        final double distancia = Math.sqrt( Math.pow((obstacle[0] - robot[0]), 2) 
+                                    + Math.pow((obstacle[1] - robot[1]), 2) );
+        
+        if( distancia > MAX_DIST )
+            return new double[]{0, 0, 0}; // El obstaculo no me preocupa
+        else
+        {
+            final double magnitud = (MAX_DIST - distancia) / distancia,
+                    x = magnitud * (obstacle[0] - robot[0] ) / distancia,
+                    y = magnitud * (obstacle[0] - robot[0] ) / distancia;
+            
+            return new double[] { magnitud, x, y};
+        }
+    }
+    
+    /**
+     * 
+     * Calcula la nueva direcion a tomar
+     * 
+     * @param newDir Nueva direcion a tomar (x, y)
+     * @return vector direcion (magnitud, x, y)
+     */
+    public double[] moveAhead(final double[] newDir)
+    {        
+        final double angulo = Math.sqrt( Math.pow(newDir[0], 2) +Math.pow(newDir[1], 2) );
+        final double magnitud = 5,
+                x = magnitud * newDir[0] / angulo,
+                y = magnitud * newDir[1] / angulo;
+        
+        return new double[] { magnitud, x, y};
+    }
 
     public static void main(String[] args) {
         int[][] tests = new int [][] {
