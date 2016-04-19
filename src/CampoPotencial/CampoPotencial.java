@@ -94,9 +94,9 @@ public class CampoPotencial {
      * @param robot Posicion del robot (x, y)
      * @return vector direcion (magnitud, x, y)
      */
-    public double[] avoidObstacle(final int[] obstacle, final int[] robot)
+    public double[] avoidObstacle(final double[] obstacle, final double[] robot)
     {
-        final double distancia = Math.sqrt( Math.pow((obstacle[0] - robot[0]), 2) 
+        final double distancia = Math.sqrt(Math.pow((obstacle[0] - robot[0]), 2) 
                                     + Math.pow((obstacle[1] - robot[1]), 2) );
         
         if( distancia > MAX_DIST )
@@ -127,6 +127,27 @@ public class CampoPotencial {
         
         return new double[] { magnitud, x, y};
     }
+    /**
+     * Metodo para que el robot ande
+     * 
+     * @TODO medir debe devolver el valor de cada sensor
+     * @TODO pasarle los parametros al motor para que cambie
+     */
+    public void run()
+    {
+        while(true)
+        {
+            final int[] distancias = sensores.medir();
+            double[] direccion = new double[] { 0, 0, 0};
+            for(int i = 0; i < distancias.length; i++)
+            {
+                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0], 
+                                        (double) distancias[i]*sensor_directions[i][0]};
+                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
+                direccion = combinar(direccion, evitar);
+            }
+        }
+    }
 
     public static void main(String[] args) {
         int[][] tests = new int [][] {
@@ -141,5 +162,23 @@ public class CampoPotencial {
             System.out.println("====================");
             System.out.println("dir: " + result[0] + ", vel: " + result[1] + ")");
         }
+        
+        
+        // PUNTO 1 Evitar_Obstaculos 
+       
+        
+    }
+    /**
+     * 
+     * @param direccion1 
+     * @param direccion2 
+     * @return suma vectorial
+     */
+    private double[] combinar(double[] direccion1, double[] direccion2) {
+        return new double[]{ (direccion1[0]+direccion2[0])/2, 
+                            (direccion1[1]+direccion2[1]),
+                            (direccion1[2]+direccion2[2]) };
+        
+    // MIRAR QUE HACER CON LA MAGNITUD. HE PUESTO AL MEDIA
     }
 }
