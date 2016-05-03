@@ -3,6 +3,8 @@ package CampoPotencial;
 import actuadores.MotorOruga;
 import sensores.SRF;
 
+import java.util.Collections;
+
 /**
  *
  */
@@ -12,7 +14,7 @@ public class CampoPotencial {
 
     private MotorOruga motor;
 
-    private static final int MAX_DIST = 70;
+    private static final int MAX_DIST = 50;
 
     private static final float sqrt2 = (float) Math.sqrt(2)/2;
 
@@ -60,9 +62,27 @@ public class CampoPotencial {
         float[] push_vector = reduce_vectors(normalized_directions);
         float dir = push_vector[0];
 
-        push_vector[0] =  - (dir/Math.abs(dir)) * (1 - Math.abs(dir));
-        push_vector[1] =  push_vector[1] / (1 + sqrt2*2); // velocidad directamente proporcional a la distancia frontal (mas lejos mas rapido)
+        System.out.println(push_vector[0] + " " + push_vector[1]);
+
+        if(dir != 0)
+            push_vector[0] =  - (dir/Math.abs(dir)) * (1 - Math.abs(dir));
+        //push_vector[1] =  push_vector[1] / (1 + sqrt2*2); // velocidad directamente proporcional a la distancia frontal (mas lejos mas rapido)
+        push_vector[1] = gen_velocity(distancias);
         return push_vector;
+    }
+
+    private static float gen_velocity(int[] distancias) {
+        float frontalDistance =
+                distancias[1]*sensor_directions[1][1] +
+                distancias[2] +
+                distancias[3]*sensor_directions[3][1];
+
+        float max_dist = MAX_DIST + MAX_DIST*sqrt2*2;
+
+        float normaliced_dist = frontalDistance/max_dist;
+
+        if (normaliced_dist > 1) return 1;
+        else return 1-normaliced_dist;
     }
 
     private static float[] reduce_vectors(float[][] vectors) {
@@ -169,13 +189,15 @@ public class CampoPotencial {
     }
 
     public static void main(String[] args) {
-//        sensor 0: 174
-//        sensor 1: 37
-//        sensor 2: 17
-//        sensor 3: 123
-//        sensor 4: 218
+//        sensor 0: 97
+//        sensor 1: 174
+//        sensor 2: 212
+//        sensor 3: 173
+//        sensor 4: 239
+//        Action: v-> 0.0 giro -> NaN
+//        R: 128.0 L: 128.0
         int[][] tests = new int [][] {
-                new int[] {174,37,17,123,218}
+                new int[] {97,174,212,173,239}
 //                new int[] {9,0,0,0,0},
 //                new int[] {0,0,9,0,0},
 //                new int[] {0,0,0,0,9}
@@ -184,7 +206,7 @@ public class CampoPotencial {
         for (int[] test: tests) {
             float[] result = enviromentVector(test);
             System.out.println("====================");
-            System.out.println("dir: " + result[0] + ", vel: " + result[1] + ")");
+            System.out.println("dir: " + result[0] + ", vel: " + result[1]);
         }
         
         

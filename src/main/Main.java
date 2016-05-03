@@ -50,7 +50,7 @@ public class Main {
         
        
         CampoPotencial campo = new CampoPotencial(sensores, ruedas);
-        //campo.run();
+        campo.run();
         ruedas.stop();
        /*Scanner teclado = new Scanner(System.in);
         boolean seguir = true;
