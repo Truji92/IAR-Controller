@@ -48,6 +48,43 @@ public class MotorOruga {
         motorAction((char) motorL, (char) motorR);
     }
 
+    public void setVelocity2(float avance, float giro) {
+        float diffVel = 255 * giro;
+        float motorL = 128 + diffVel/2;
+        float motorR = 128 - diffVel/2;
+
+        Velocity v = increaseLinealVelocity(new Velocity(motorL, motorR), avance);
+        motorAction((char) motorL, (char) motorR);
+    }
+
+    private Velocity increaseLinealVelocity(Velocity v, float dv) {
+        v.vx += dv;
+        v.vy += dv;
+
+        float overflow;
+        if (v.vx > 255) {
+            overflow = v.vx - 255;
+            v.vx = 255;
+            v.vy -= overflow;
+        }
+        if (v.vx < 0) {
+            overflow = Math.abs(v.vx);
+            v.vx = 0;
+            v.vy += overflow;
+        }
+        if (v.vy > 255) {
+            overflow = v.vy - 255;
+            v.vy = 255;
+            v.vx -= overflow;
+        }
+        if (v.vy < 0) {
+            overflow = Math.abs(v.vy);
+            v.vy = 0;
+            v.vx += overflow;
+        }
+        return v;
+    }
+
     /**
      * Avanzar en línea recta
      */
@@ -109,4 +146,14 @@ public class MotorOruga {
             System.out.println("Fallo al escribir/leer un sensor: " + e.getStackTrace());
         }
     }
+}
+
+class Velocity {
+    public float vx;
+    public float vy;
+
+    public Velocity(float vx, float vy) {
+        this.vx = vx;
+        this.vy = vy;
+    };
 }
