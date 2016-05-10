@@ -92,4 +92,29 @@ public class CampoPotencialObstaculo {
             System.out.println("dir: " + result[0] + ", vel: " + result[1] + ")");
         }
     }
+
+    public void run()
+    {
+        while(true)
+        {
+            /*final int[] distancias = new int[sensores.length];
+
+            double[] direccion = new double[] { 0, 0, 0};
+            for(int i = 0; i < distancias.length; i++)
+            {
+                int medida = sensores[i].medir();
+                distancias[i] = medida;
+                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0],
+                                        (double) distancias[i]*sensor_directions[i][0]};
+                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
+                direccion = combinar(direccion, evitar);
+            }
+
+            motor.setVelocity((float)direccion[2], (float)direccion[1]);*/
+            float[] action = tick();
+            if(action[1] > 1) action[1] = 1;
+            System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
+            motor.setVelocity(action[1], action[0]);
+        }
+    }
 }

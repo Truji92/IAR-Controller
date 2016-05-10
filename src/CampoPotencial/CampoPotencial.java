@@ -72,17 +72,20 @@ public class CampoPotencial {
     }
 
     private static float gen_velocity(int[] distancias) {
-        float frontalDistance =
-                distancias[1]*sensor_directions[1][1] +
-                distancias[2] +
-                distancias[3]*sensor_directions[3][1];
+//        float frontalDistance =
+//                distancias[1]*sensor_directions[1][1] +
+//                distancias[2] +
+//                distancias[3]*sensor_directions[3][1];
 
-        float max_dist = MAX_DIST + MAX_DIST*sqrt2*2;
+        float frontalDistance = distancias[2];
+
+//        float max_dist = MAX_DIST + MAX_DIST*sqrt2*2;
+        float max_dist = MAX_DIST;
 
         float normaliced_dist = frontalDistance/max_dist;
 
         if (normaliced_dist > 1) return 1;
-        else return 1-normaliced_dist;
+        else return 1 - normaliced_dist;
     }
 
     private static float[] reduce_vectors(float[][] vectors) {
