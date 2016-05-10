@@ -52,8 +52,9 @@ public class MotorOruga {
         float motorL = 128 + diffVel/2;
         float motorR = 128 - diffVel/2;
 
-        Velocity v = increaseLinealVelocity(new Velocity(motorL, motorR), avance);
-        motorAction((char) motorL, (char) motorR);
+        Velocity v = increaseLinealVelocity(new Velocity(motorL, motorR), 128 * avance);
+        v.vx = 255 - Math.abs(v.vx);
+        motorAction((char) v.vx, (char) v.vy);
     }
 
     private Velocity increaseLinealVelocity(Velocity v, float dv) {
