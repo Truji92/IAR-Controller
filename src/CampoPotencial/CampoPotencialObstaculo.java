@@ -69,6 +69,15 @@ public class CampoPotencialObstaculo {
         return (MAX_DIST - distancia) / MAX_DIST ;
     }
 
+    public float[] tick() {
+        int [] distancias = new int[sensores.length];
+
+        for(int i = 0; i<sensores.length; i++)
+            distancias[i] = sensores[i].medir();
+
+        return calcularPotencial(distancias);
+    }
+
     public static void main(String[] args) {
         int[][] tests = new int [][] {
                 new int[] {5,30,100,200,200}
