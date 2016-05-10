@@ -14,8 +14,8 @@ public class MotorOruga {
     static private char velocidad = 0x01;
     static private char giro = 0x02;
 
-    private final int velocidadXMax = 20;
-    private final int velocidadYMax = 10;
+    private final int velocidadXMax = 64;
+    private final int velocidadYMax = 64;
 
 
     /**
@@ -42,7 +42,6 @@ public class MotorOruga {
         } else if (vy < 0) {
             motorL -= velocidadYMax * vy * (vx/Math.abs(vx));
         }
-
 
         motorL = 255 - Math.abs(motorL);
         motorAction((char) motorL, (char) motorR);

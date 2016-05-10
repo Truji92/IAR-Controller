@@ -27,7 +27,7 @@ public class CampoPotencialObstaculo {
     //Peso de cada sensor en el potencial final [0-1]
     private static final float[] pesos = new float[] {1,1,1,1,1};
 
-    private static final float[] campo_constante = new float[] {0, 0.6f}; //Campo constante hacia delante para que el robot avance
+    private static final float[] campo_constante = new float[] {0, 1f}; //Campo constante hacia delante para que el robot avance
 
     public CampoPotencialObstaculo(SRF[] sensores, MotorOruga motor) {
         this.sensores = sensores;
@@ -54,6 +54,11 @@ public class CampoPotencialObstaculo {
         campo_total[0] += campo_constante[0];
         campo_total[1] += campo_constante[1];
 
+        float modulo = (float)Math.sqrt(campo_total[0]*campo_total[0] + campo_total[1]*campo_total[1]);
+
+        campo_total[0] /= modulo;
+        campo_total[1] /= modulo;
+
         return campo_total;
     }
 
@@ -64,9 +69,18 @@ public class CampoPotencialObstaculo {
         return (MAX_DIST - distancia) / MAX_DIST ;
     }
 
+    public float[] tick() {
+        int [] distancias = new int[sensores.length];
+
+        for(int i = 0; i<sensores.length; i++)
+            distancias[i] = sensores[i].medir();
+
+        return calcularPotencial(distancias);
+    }
+
     public static void main(String[] args) {
         int[][] tests = new int [][] {
-                new int[] {174,37,17,123,218}
+                new int[] {5,30,100,200,200}
 //                new int[] {9,0,0,0,0},
 //                new int[] {0,0,9,0,0},
 //                new int[] {0,0,0,0,9}
@@ -76,6 +90,31 @@ public class CampoPotencialObstaculo {
             float[] result = calcularPotencial(test);
             System.out.println("====================");
             System.out.println("dir: " + result[0] + ", vel: " + result[1] + ")");
+        }
+    }
+
+    public void run()
+    {
+        while(true)
+        {
+            /*final int[] distancias = new int[sensores.length];
+
+            double[] direccion = new double[] { 0, 0, 0};
+            for(int i = 0; i < distancias.length; i++)
+            {
+                int medida = sensores[i].medir();
+                distancias[i] = medida;
+                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0],
+                                        (double) distancias[i]*sensor_directions[i][0]};
+                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
+                direccion = combinar(direccion, evitar);
+            }
+
+            motor.setVelocity((float)direccion[2], (float)direccion[1]);*/
+            float[] action = tick();
+            if(action[1] > 1) action[1] = 1;
+            System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
+            motor.setVelocity(action[1], action[0]);
         }
     }
 }

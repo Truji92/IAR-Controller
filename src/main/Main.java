@@ -1,6 +1,6 @@
 package main;
 
-import CampoPotencial.CampoPotencial;
+import CampoPotencial.*;
 import actuadores.MotorOruga;
 import giovynet.nativelink.SerialPort;
 import sensores.Brujula;
@@ -49,8 +49,8 @@ public class Main {
         MotorOruga ruedas = new MotorOruga(serial);
         
        
-        CampoPotencial campo = new CampoPotencial(sensores, ruedas);
-        //campo.run();
+        CampoPotencialObstaculo campo = new CampoPotencialObstaculo(sensores, ruedas);
+        campo.run();
         ruedas.stop();
        /*Scanner teclado = new Scanner(System.in);
         boolean seguir = true;
