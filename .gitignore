@@ -15,3 +15,6 @@ hs_err_pid*
 .idea
 *.iml
 !lib/GiovynetDriver.jar
+!lib/webcam-capture-0.3.10.jar
+!lib/slf4j-api-1.7.21.jar
+!lib/slf4j-simple-1.7.21.jar

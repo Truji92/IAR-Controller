@@ -29,6 +29,8 @@ public class CampoPotencialObstaculo {
 
     private static final float[] campo_constante = new float[] {0, 0.8f}; //Campo constante hacia delante para que el robot avance
 
+    private static int[] distancias = new int[5];
+
     public CampoPotencialObstaculo(SRF[] sensores, MotorOruga motor) {
         this.sensores = sensores;
         this.motor = motor;
@@ -79,15 +81,13 @@ public class CampoPotencialObstaculo {
         return (MAX_DIST - distancia) / MAX_DIST ;
     }
 
-    public float[] tick() {
-        int [] distancias = new int[sensores.length];
+    public void tickMedidas() {
 
         for(int i = 0; i<sensores.length; i++) {
             distancias[i] = sensores[i].medir();
             System.out.println("SENSOR "+i+": "+distancias[i]);
         }
-            
-        return calcularPotencial(distancias);
+
     }
 
     public static void main(String[] args) {
@@ -101,7 +101,7 @@ public class CampoPotencialObstaculo {
         for (int[] test: tests) {
             float[] result = calcularPotencial(test);
             System.out.println("====================");
-            System.out.println("dir: " + result[0] + ", vel: " + result[1] + ")");
+            System.out.println("dir: " + result[0] + ", vel: " + result[1] + "");
         }
     }
 
@@ -123,10 +123,29 @@ public class CampoPotencialObstaculo {
             }
 
             motor.setVelocity((float)direccion[2], (float)direccion[1]);*/
-            float[] action = tick();
-            if(action[1] > 1) action[1] = 1;
-            System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
-            motor.setVelocity2(action[1], action[0]);
+            tickMedidas();
+
+            if (distancias[2] > 25)
+                motor.avanzar(1f);
+            else {
+                motor.stop();
+
+                float[] action = calcularPotencial(distancias);
+
+                System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
+
+                long minTurnTime = 1000;
+
+                long maxTurnTime = 1500;
+
+                long turnTime = (long) (minTurnTime + maxTurnTime * Math.abs(action[0]));
+
+                if (action[0] < 0)
+                    motor.turnLeft(turnTime);
+                else
+                    motor.turnRight(turnTime);
+
+            }
         }
     }
 }

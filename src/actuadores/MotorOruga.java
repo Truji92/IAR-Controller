@@ -114,6 +114,39 @@ public class MotorOruga {
     }
 
     /**
+     * Gira a la izquierda sobre si mismo durante los milisegundos indicados por parámetro
+     * @param howLong
+     */
+    public void turnLeft(long howLong) {
+        spinCounterClockwise();
+        try{
+            Thread.sleep(howLong);
+        } catch (Exception ignored){}
+
+        stop();
+    }
+
+    /**
+     * Gira a la derecha sobre si mismo durante los milisegundos indicados por parámetro
+     * @param howLong
+     */
+    public void turnRight(long howLong) {
+        spinClockwise();
+        try{
+            Thread.sleep(howLong);
+        } catch (Exception ignored){}
+
+        stop();
+    }
+
+    public void avanzar(float v) {
+        float motorL = 128 - velocidadXMax * v;
+        float motorR = 128 + velocidadXMax * v;
+
+        motorAction((char) motorL, (char) motorR);
+    }
+
+    /**
      * Para ambos motores
      */
     public void stop() {
