@@ -14,6 +14,12 @@ public class CampoPotencialObstaculo {
 
     private static final float MAX_DIST = 20;
 
+    private static final int TIEMPO_BARRIDO = 5;
+
+    private static final int TIEMPO_POR_BARRIDO = 5;
+
+    private static final int NUMERO_GIROS_CAMARA = 8;
+
     private static final float sqrt2 = (float) Math.sqrt(2)/2;
 
     private static final float[][] sensor_directions = new float[][] {
@@ -85,9 +91,31 @@ public class CampoPotencialObstaculo {
 
         for(int i = 0; i<sensores.length; i++) {
             distancias[i] = sensores[i].medir();
+            if(i == 1 && distancias[i] > 5) {
+                distancias[i]-=5;
+            }
             System.out.println("SENSOR "+i+": "+distancias[i]);
         }
 
+    }
+    
+    public void tickFrontal() {
+        for(int i = 1; i<sensores.length-1; i++) {
+            distancias[i] = sensores[i].medir();
+            if(i == 1 && distancias[i] > 5) {
+                distancias[i]-=5;
+            }
+            System.out.println("SENSOR "+i+": "+distancias[i]);
+        }
+    }
+
+    public void barrido() {
+        for(int i = 0; i < NUMERO_GIROS_CAMARA ; i++){
+            motor.turnLeft(450);
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ignored) {}
+        }
     }
 
     public static void main(String[] args) {
@@ -107,36 +135,39 @@ public class CampoPotencialObstaculo {
 
     public void run()
     {
-        while(true)
-        {
-            /*final int[] distancias = new int[sensores.length];
+        int muestreos = 0;
 
-            double[] direccion = new double[] { 0, 0, 0};
-            for(int i = 0; i < distancias.length; i++)
-            {
-                int medida = sensores[i].medir();
-                distancias[i] = medida;
-                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0],
-                                        (double) distancias[i]*sensor_directions[i][0]};
-                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
-                direccion = combinar(direccion, evitar);
+        int num_muestreos = TIEMPO_BARRIDO * TIEMPO_POR_BARRIDO;
+
+        while(true){
+
+            muestreos++;
+
+            System.out.println(muestreos);
+            
+            if(muestreos==num_muestreos){
+                barrido();
+                muestreos = 0;
             }
 
-            motor.setVelocity((float)direccion[2], (float)direccion[1]);*/
-            tickMedidas();
+            tickFrontal();
 
-            if (distancias[2] > 25)
+            boolean shouldTurn = distancias[1] < 15 || distancias[2] < 30 || distancias[3] < 15; 
+            
+            if (!shouldTurn)
                 motor.avanzar(1f);
             else {
                 motor.stop();
+                
+                tickMedidas();
 
                 float[] action = calcularPotencial(distancias);
 
                 System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
 
-                long minTurnTime = 1000;
+                long minTurnTime = 200;
 
-                long maxTurnTime = 1500;
+                long maxTurnTime = 500;
 
                 long turnTime = (long) (minTurnTime + maxTurnTime * Math.abs(action[0]));
 
