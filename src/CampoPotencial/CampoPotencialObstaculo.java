@@ -14,6 +14,12 @@ public class CampoPotencialObstaculo {
 
     private static final float MAX_DIST = 20;
 
+    private static final int TIEMPO_BARRIDO = 30;
+
+    private static final int TIEMPO_POR_BARRIDO = 5;
+
+    private static final int NUMERO_GIROS_CAMARA = 8;
+
     private static final float sqrt2 = (float) Math.sqrt(2)/2;
 
     private static final float[][] sensor_directions = new float[][] {
@@ -103,6 +109,15 @@ public class CampoPotencialObstaculo {
         }
     }
 
+    public void barrido() {
+        for(int i = 0; i < NUMERO_GIROS_CAMARA ; i++){
+            motor.turnLeft(300);
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {};
+        }
+    }
+
     public static void main(String[] args) {
         int[][] tests = new int [][] {
                 new int[] {100,50,13,78,150}
@@ -120,22 +135,19 @@ public class CampoPotencialObstaculo {
 
     public void run()
     {
-        while(true)
-        {
-            /*final int[] distancias = new int[sensores.length];
+        int muestreos = 0;
 
-            double[] direccion = new double[] { 0, 0, 0};
-            for(int i = 0; i < distancias.length; i++)
-            {
-                int medida = sensores[i].medir();
-                distancias[i] = medida;
-                double[] posObstaculo = {(double) distancias[i]*sensor_directions[i][0],
-                                        (double) distancias[i]*sensor_directions[i][0]};
-                final double[] evitar = avoidObstacle(posObstaculo , new double[] {0, 0});
-                direccion = combinar(direccion, evitar);
+        int num_muestreos = TIEMPO_BARRIDO * TIEMPO_POR_BARRIDO;
+
+        while(true){
+
+            muestreos++;
+
+            if(muestreos==num_muestreos){
+                barrido();
+                muestreos = 0;
             }
 
-            motor.setVelocity((float)direccion[2], (float)direccion[1]);*/
             tickFrontal();
 
             boolean shouldTurn = distancias[1] < 15 || distancias[2] < 30 || distancias[3] < 15; 
