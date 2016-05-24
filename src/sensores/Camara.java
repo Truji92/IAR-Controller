@@ -1,25 +1,39 @@
 package sensores;
 
-import com.github.sarxos.webcam.Webcam;
-
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.rmi.server.ExportException;
-
-/**
- * Created by alejandro on 24/05/16.
- */
 public class Camara {
 
-    public static void main(String[] args) {
-        Webcam webcam = Webcam.getDefault();
+    public Camara()
+    {
 
-        System.out.println("asdasd");
+    }
+
+    public static void main(String... args)
+    {
+        Webcam wc = Webcam.getDefault();
+        if(wc!=null)
+        {
+            System.out.println(wc.getName());
+        }
+        wc.open();
+        ImageIO.write(wc.getImage(), "PNG", new File("prueba.png"));
+
+        Cerramos el puerto
+        p.close();
 
 
-//        webcam.open();
-//        try {
-//            ImageIO.write(webcam.getImage(), "PNG", new File("hello-world.png"));
-//        } catch (Exception ignored) {}
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        Mat frame = new Mat();
+        VideoCapture camera = new VideoCapture(0);
+        Thread.sleep(1000);
+
+        camera.open(0);
+        if (!camera.isOpened()) {
+            System.out.println("Error al abrir la camara");
+        } else {
+            camera.read(frame);
+            Highgui.imwrite("nuevaFoto2.jpg", frame);
+            camera.release();
+
+        }
     }
 }
