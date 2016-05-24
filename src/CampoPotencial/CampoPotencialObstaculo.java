@@ -85,9 +85,22 @@ public class CampoPotencialObstaculo {
 
         for(int i = 0; i<sensores.length; i++) {
             distancias[i] = sensores[i].medir();
+            if(i == 1 && distancias[i] > 5) {
+                distancias[i]-=5;
+            }
             System.out.println("SENSOR "+i+": "+distancias[i]);
         }
 
+    }
+    
+    public void tickFrontal() {
+        for(int i = 1; i<sensores.length-1; i++) {
+            distancias[i] = sensores[i].medir();
+            if(i == 1 && distancias[i] > 5) {
+                distancias[i]-=5;
+            }
+            System.out.println("SENSOR "+i+": "+distancias[i]);
+        }
     }
 
     public static void main(String[] args) {
@@ -123,20 +136,24 @@ public class CampoPotencialObstaculo {
             }
 
             motor.setVelocity((float)direccion[2], (float)direccion[1]);*/
-            tickMedidas();
+            tickFrontal();
 
-            if (distancias[2] > 25)
+            boolean shouldTurn = distancias[1] < 15 || distancias[2] < 30 || distancias[3] < 15; 
+            
+            if (!shouldTurn)
                 motor.avanzar(1f);
             else {
                 motor.stop();
+                
+                tickMedidas();
 
                 float[] action = calcularPotencial(distancias);
 
                 System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
 
-                long minTurnTime = 1000;
+                long minTurnTime = 200;
 
-                long maxTurnTime = 1500;
+                long maxTurnTime = 500;
 
                 long turnTime = (long) (minTurnTime + maxTurnTime * Math.abs(action[0]));
 

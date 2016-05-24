@@ -14,8 +14,8 @@ public class MotorOruga {
     static private char velocidad = 0x01;
     static private char giro = 0x02;
 
-    private final int velocidadXMax = 64;
-    private final int velocidadYMax = 64;
+    private final int velocidadXMax = 50;
+    private final int velocidadYMax = 50;
 
 
     /**
