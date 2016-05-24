@@ -14,7 +14,7 @@ public class CampoPotencialObstaculo {
 
     private static final float MAX_DIST = 20;
 
-    private static final int TIEMPO_BARRIDO = 30;
+    private static final int TIEMPO_BARRIDO = 5;
 
     private static final int TIEMPO_POR_BARRIDO = 5;
 
@@ -111,7 +111,7 @@ public class CampoPotencialObstaculo {
 
     public void barrido() {
         for(int i = 0; i < NUMERO_GIROS_CAMARA ; i++){
-            motor.turnLeft(300);
+            motor.turnLeft(450);
             try {
                 Thread.sleep(1000);
             } catch (Exception ignored) {}
@@ -143,6 +143,8 @@ public class CampoPotencialObstaculo {
 
             muestreos++;
 
+            System.out.println(muestreos);
+            
             if(muestreos==num_muestreos){
                 barrido();
                 muestreos = 0;
