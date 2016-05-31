@@ -5,70 +5,93 @@ import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
-import org.opencv.utils.Converters;
 
-import javax.imageio.ImageIO;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class Camara {
 
-    public Camara()
-    {
-
-    }
-
-    public static void main(String... args)
-    {
-//        Webcam wc = Webcam.getDefault();
-//        if(wc!=null)
-//        {
-//            System.out.println(wc.getName());
-//        }
-//        wc.open();
-//        ImageIO.write(wc.getImage(), "PNG", new File("prueba.png"));
-
-        //Cerramos el puerto
-        //p.close();
-
-
+    // Carga de la libreria de OpenCV
+    static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-        analizeImg();
-
-
-//        Mat frame = new Mat();
-//        VideoCapture camera = new VideoCapture(0);
-//        try {
-//            Thread.sleep(1000);
-//        } catch (Exception ignored) {}
-//
-//        camera.open(0);
-//        if (!camera.isOpened()) {
-//            System.out.println("Error al abrir la camara");
-//        } else {
-//            camera.read(frame);
-//            long time = System.currentTimeMillis();
-//            Highgui.imwrite("nuevaFoto2"+time+".jpg", frame);
-//            camera.release();
-//
-//        }
     }
 
+    /**
+     * True-> guardar las capturas para debug en el sistema de archivos
+     */
+    private static final boolean __saveCaptures = false;
+
+    private static boolean found = false;
+    private static boolean goal_reached = false;
+    private static double goal_position;
+
+    /**
+     * Distancia del centro a la que se considera que el objeto se encuentra de frente
+     */
+    private static final double CENTER_THRESHOLD = 40;
+    private static final double CENTER = 320;
+
+    /**
+     * Tamaño del objeto (en píxeles) a partir del cual se considera que esta suficientemente cerca como para considerarse
+     * que se ha alcanzado el objetivo.
+     */
+    private static final double GOAL_SIZE = 12000;
+
+    public static void main(String... args) {
+        Mat img = Highgui.imread("matlab/images/test2.jpg", Highgui.CV_LOAD_IMAGE_UNCHANGED);
+
+        analize(img);
+    }
+
+    /**
+     * Toma una captura y la analiza, actualizando el estado de la clase Camara.
+     */
+    public static void captureAndAnalize() {
+        Mat img = capture();
+        found = false;
+        analize(img);
+    }
+
+    /**
+     * Captura una imagen
+     * @return La imagen
+     */
+    private static Mat capture() {
+        Mat frame = new Mat();
+        VideoCapture camera = new VideoCapture(0);
+        try {
+            Thread.sleep(1000);
+        } catch (Exception ignored) {}
+
+        camera.open(0);
+        if (!camera.isOpened()) {
+            System.out.println("Error al abrir la camara");
+        } else {
+            camera.read(frame);
+            //long time = System.currentTimeMillis();
+            //Highgui.imwrite("nuevaFoto2"+time+".jpg", frame);
+            camera.release();
+        }
+        return frame;
+    }
+
+    /**
+     * Parámetros obtenidos mendiante los scripts de Matlab para reconocimiento del objeto
+     */
     private static final double Rc = 198.6982;
     private static final double Gc = 178.8183;
     private static final double Bc = 4.8619;
     private static final double RADIO = 81.8675;
     private static final double MIN_AREA = 105;
 
-    public static void analizeImg() {
+    /**
+     * Analiza una imagen y actualiza el estado de las variables de la clase para representar el analisis.
+     * @param img
+     */
+    private static void analize(Mat img) {
 
         List<MatOfPoint> contornos = new ArrayList<>();
         Mat hierarchy = new Mat();
-
-        Mat img = Highgui.imread("matlab/images/test5.jpg", Highgui.CV_LOAD_IMAGE_UNCHANGED);
 
         // Separamos en componentes
         List<Mat> channels = new ArrayList<>(3);
@@ -107,12 +130,17 @@ public class Camara {
         // Buscamos contornos
         Imgproc.findContours(candidates, contornos, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_NONE);
 
+        double bigger_found = 0;
+
         for (int i = 0; i < contornos.size(); i++) {
 
             Mat imgPro = Mat.zeros(img.size(), img.type());
             Imgproc.drawContours(imgPro, contornos, i, Scalar.all(1), -1);
 
-            if (Core.sumElems(imgPro).val[0] >= MIN_AREA) {
+            double area = Core.sumElems(imgPro).val[0];
+
+            if (area >= MIN_AREA && area > bigger_found) {
+                bigger_found = area;
                 Moments moments = Imgproc.moments(contornos.get(i));
 
                 Point centroid = new Point();
@@ -120,12 +148,53 @@ public class Camara {
                 centroid.x = moments.get_m10() / moments.get_m00();
                 centroid.y = moments.get_m01() / moments.get_m00();
 
-                ///IMG
-                Core.multiply(imgPro, Scalar.all(255), imgPro);
-                Core.circle(imgPro, centroid, 3, new Scalar(0,0,255), 5);
-                Highgui.imwrite("out"+i+".jpg", imgPro);
+                goal_position = centroid.x;
+
+                // Si el tamaño es suficiente hemos encontrado el objetivo
+                if (area > GOAL_SIZE)
+                    goal_reached = true;
+
+                // Debug
+                if (__saveCaptures) {
+                    Core.multiply(imgPro, Scalar.all(255), imgPro);
+                    Core.circle(imgPro, centroid, 3, new Scalar(0,0,255), 5);
+                    Highgui.imwrite("out"+i+"_"+System.currentTimeMillis()+".jpg", imgPro);
+                }
 
             }
         }
+    }
+
+    /**
+     * Devuelve True si la última imagen analizada contenia el objeto.
+     *
+     */
+    public static boolean isFound() {
+        return found;
+    }
+
+    /**
+     * Devuelve la posición relativa del objeto si estaba contenido en la última imagen analizada
+     * @return -1 => A la izquierda
+     *          0 => De frente
+     *          1 => A la derecha
+     */
+    public static int getGoalPosition() {
+        if (!found) return 0;
+        else {
+            if (goal_position < CENTER - CENTER_THRESHOLD)
+                return -1;
+            else if(goal_position > CENTER + CENTER_THRESHOLD)
+                return 1;
+            else return 0;
+        }
+    }
+
+    /**
+     * Indica si se ha alcanzado el objetivo
+     *
+     */
+    public static boolean goalReached() {
+        return goal_reached;
     }
 }
