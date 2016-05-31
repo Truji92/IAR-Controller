@@ -47,16 +47,16 @@ public class Camara {
     public static void main(String... args) {
         Mat img = Highgui.imread("matlab/images/test2.jpg", Highgui.CV_LOAD_IMAGE_UNCHANGED);
 
-        analize(img);
+        analize(img, false);
     }
 
     /**
      * Toma una captura y la analiza, actualizando el estado de la clase Camara.
      */
-    public static void captureAndAnalize() {
+    public static void captureAndAnalize(boolean esBarrido) {
         Mat img = capture();
         found = false;
-        analize(img);
+        analize(img, esBarrido);
     }
 
     /**
@@ -90,7 +90,7 @@ public class Camara {
      * Analiza una imagen y actualiza el estado de las variables de la clase para representar el analisis.
      * @param img
      */
-    private static void analize(Mat img) {
+    private static void analize(Mat img, boolean esBarrido) {
 
         List<MatOfPoint> contornos = new ArrayList<>();
         Mat hierarchy = new Mat();
@@ -162,8 +162,8 @@ public class Camara {
                     Core.multiply(imgPro, Scalar.all(255), imgPro);
                     Core.circle(imgPro, centroid, 3, new Scalar(0,0,255), 5);
                     float time = System.currentTimeMillis();
-                    Highgui.imwrite("in_"+time+".jpg", img);
-                    Highgui.imwrite("out_"+time+".jpg", imgPro);
+                    Highgui.imwrite(esBarrido?"bar_":"" + "in_"+time+".jpg", img);
+                    Highgui.imwrite(esBarrido?"bar_":"" + "out_"+time+".jpg", imgPro);
                 }
 
             }

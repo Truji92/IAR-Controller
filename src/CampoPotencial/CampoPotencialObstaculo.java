@@ -108,18 +108,34 @@ public class CampoPotencialObstaculo {
             }
             System.out.println("SENSOR "+i+": "+distancias[i]);
         }
-        Camara.captureAndAnalize();
+        Camara.captureAndAnalize(true);
     }
 
     public void barrido() {
-        for(int i = 0; i < NUMERO_GIROS_CAMARA ; i++){
-            Camara.captureAndAnalize();
-            try {
-                Thread.sleep(1000);
-            } catch(Exception ig) {}
-            if (Camara.isFound()) break;
-            else motor.turnLeft(250);
+        int i = 0;
+
+        System.out.println("#### START BARRIDO ####");
+        while (!Camara.isFound() && i < NUMERO_GIROS_CAMARA) {
+            Camara.captureAndAnalize(true);
+
+            System.out.println("Giro "+i+": "+Camara.isFound());
+
+            if (!Camara.isFound()) {
+                motor.turnLeft(250);
+                i++;
+            }
         }
+        System.out.println("#### FIN BARRIDO #### i: " +i);
+
+
+//        for(int i = 0; i < NUMERO_GIROS_CAMARA ; i++){
+//            Camara.captureAndAnalize();
+//            try {
+//                Thread.sleep(1000);
+//            } catch(Exception ig) {}
+//            if (Camara.isFound()) break;
+//            else motor.turnLeft(250);
+//        }
     }
 
     public static void main(String[] args) {
