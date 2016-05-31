@@ -51,7 +51,7 @@ public class Main {
        
         CampoPotencialObstaculo campo = new CampoPotencialObstaculo(sensores, ruedas);
         campo.run();
-        ruedas.stop();
+        System.exit(0);
        /*Scanner teclado = new Scanner(System.in);
         boolean seguir = true;
 

@@ -19,7 +19,7 @@ public class CampoPotencialObstaculo {
 
     private static final int TIEMPO_POR_BARRIDO = 5;
 
-    private static final int NUMERO_GIROS_CAMARA = 8;
+    private static final int NUMERO_GIROS_CAMARA = 450*8/250;
 
     private static final float sqrt2 = (float) Math.sqrt(2)/2;
 
@@ -113,11 +113,12 @@ public class CampoPotencialObstaculo {
 
     public void barrido() {
         for(int i = 0; i < NUMERO_GIROS_CAMARA ; i++){
-            motor.turnLeft(450);
+            Camara.captureAndAnalize();
             try {
-                Camara.captureAndAnalize();
-                if (Camara.isFound()) return;
-            } catch (Exception ignored) {}
+                Thread.sleep(1000);
+            } catch(Exception ig) {}
+            if (Camara.isFound()) break;
+            else motor.turnLeft(250);
         }
     }
 
@@ -141,15 +142,21 @@ public class CampoPotencialObstaculo {
         int muestreos = 0;
 
         int num_muestreos = TIEMPO_BARRIDO * TIEMPO_POR_BARRIDO;
+        
+        if(!Camara.isFound())
+            barrido();
 
-        while(true){
+        boolean loop = true;
+        
+        while(loop){
             if (!Camara.goalReached()) {
                 muestreos++;
-                System.out.println(muestreos);
-
-                if(muestreos%num_muestreos == 0) barrido();
-
+                //System.out.println(muestreos);
+                               
                 tickFrontal();
+                
+                if(!Camara.isFound() && muestreos%num_muestreos == 0) barrido();
+                
                 boolean shouldTurn = distancias[1] < 15 || distancias[2] < 30 || distancias[3] < 15;
 
                 if (shouldTurn) {
@@ -173,11 +180,11 @@ public class CampoPotencialObstaculo {
                 } else {
                     if (Camara.isFound()) {
                         int direccion_giro = Camara.getGoalPosition();
-                        long turnTime = 200;
+                        long turnTime = 100;
                         if (direccion_giro > 0) {
                             motor.turnRight(turnTime);
                         } else if (direccion_giro < 0) {
-                            motor.turnRight(turnTime);
+                            motor.turnLeft(turnTime);
                         } else {
                             motor.avanzar(1f);
                         }
@@ -187,6 +194,11 @@ public class CampoPotencialObstaculo {
                 }
             } else {
                 motor.spinClockwise();
+                try{
+                    Thread.sleep(5000);
+                    motor.stop();
+                    loop=false;
+                } catch (Exception e) {}
             }
         }
     }

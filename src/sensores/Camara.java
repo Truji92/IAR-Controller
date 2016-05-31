@@ -15,12 +15,19 @@ public class Camara {
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
-
+    
+    private static VideoCapture camera;
+    
+    static {
+        camera = new VideoCapture(0);
+       
+        camera.open(0);
+    }
+            
     /**
      * True-> guardar las capturas para debug en el sistema de archivos
      */
-    private static final boolean __saveCaptures = false;
-
+    private static final boolean __saveCaptures = true;
     private static boolean found = false;
     private static boolean goal_reached = false;
     private static double goal_position;
@@ -28,14 +35,14 @@ public class Camara {
     /**
      * Distancia del centro a la que se considera que el objeto se encuentra de frente
      */
-    private static final double CENTER_THRESHOLD = 40;
+    private static final double CENTER_THRESHOLD = 150;
     private static final double CENTER = 320;
 
     /**
      * Tamaño del objeto (en píxeles) a partir del cual se considera que esta suficientemente cerca como para considerarse
      * que se ha alcanzado el objetivo.
      */
-    private static final double GOAL_SIZE = 12000;
+    private static final double GOAL_SIZE = 10000;
 
     public static void main(String... args) {
         Mat img = Highgui.imread("matlab/images/test2.jpg", Highgui.CV_LOAD_IMAGE_UNCHANGED);
@@ -58,19 +65,14 @@ public class Camara {
      */
     private static Mat capture() {
         Mat frame = new Mat();
-        VideoCapture camera = new VideoCapture(0);
-        try {
-            Thread.sleep(1000);
-        } catch (Exception ignored) {}
-
-        camera.open(0);
+        
         if (!camera.isOpened()) {
             System.out.println("Error al abrir la camara");
         } else {
             camera.read(frame);
             //long time = System.currentTimeMillis();
             //Highgui.imwrite("nuevaFoto2"+time+".jpg", frame);
-            camera.release();
+            //camera.release();
         }
         return frame;
     }
@@ -141,6 +143,7 @@ public class Camara {
 
             if (area >= MIN_AREA && area > bigger_found) {
                 bigger_found = area;
+                found = true;
                 Moments moments = Imgproc.moments(contornos.get(i));
 
                 Point centroid = new Point();
@@ -158,7 +161,9 @@ public class Camara {
                 if (__saveCaptures) {
                     Core.multiply(imgPro, Scalar.all(255), imgPro);
                     Core.circle(imgPro, centroid, 3, new Scalar(0,0,255), 5);
-                    Highgui.imwrite("out"+i+"_"+System.currentTimeMillis()+".jpg", imgPro);
+                    float time = System.currentTimeMillis();
+                    Highgui.imwrite("in_"+time+".jpg", img);
+                    Highgui.imwrite("out_"+time+".jpg", imgPro);
                 }
 
             }
