@@ -108,13 +108,15 @@ public class CampoPotencialObstaculo {
             }
             System.out.println("SENSOR "+i+": "+distancias[i]);
         }
+        Camara.captureAndAnalize();
     }
 
     public void barrido() {
         for(int i = 0; i < NUMERO_GIROS_CAMARA ; i++){
             motor.turnLeft(450);
             try {
-                Thread.sleep(1000);
+                Camara.captureAndAnalize();
+                if (Camara.isFound()) return;
             } catch (Exception ignored) {}
         }
     }
