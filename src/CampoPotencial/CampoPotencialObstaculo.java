@@ -1,6 +1,7 @@
 package CampoPotencial;
 
 import actuadores.MotorOruga;
+import sensores.Camara;
 import sensores.SRF;
 
 /**
@@ -140,42 +141,50 @@ public class CampoPotencialObstaculo {
         int num_muestreos = TIEMPO_BARRIDO * TIEMPO_POR_BARRIDO;
 
         while(true){
+            if (!Camara.goalReached()) {
+                muestreos++;
+                System.out.println(muestreos);
 
-            muestreos++;
+                if(muestreos%num_muestreos == 0) barrido();
 
-            System.out.println(muestreos);
-            
-            if(muestreos==num_muestreos){
-                barrido();
-                muestreos = 0;
-            }
+                tickFrontal();
+                boolean shouldTurn = distancias[1] < 15 || distancias[2] < 30 || distancias[3] < 15;
 
-            tickFrontal();
+                if (shouldTurn) {
+                    motor.stop();
+                    tickMedidas();
 
-            boolean shouldTurn = distancias[1] < 15 || distancias[2] < 30 || distancias[3] < 15; 
-            
-            if (!shouldTurn)
-                motor.avanzar(1f);
-            else {
-                motor.stop();
-                
-                tickMedidas();
+                    float[] action = calcularPotencial(distancias);
 
-                float[] action = calcularPotencial(distancias);
+                    System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
 
-                System.out.println("Action: v-> " + action[1] + " giro -> " + action[0]);
+                    long minTurnTime = 200;
 
-                long minTurnTime = 200;
+                    long maxTurnTime = 500;
 
-                long maxTurnTime = 500;
+                    long turnTime = (long) (minTurnTime + maxTurnTime * Math.abs(action[0]));
 
-                long turnTime = (long) (minTurnTime + maxTurnTime * Math.abs(action[0]));
-
-                if (action[0] < 0)
-                    motor.turnLeft(turnTime);
-                else
-                    motor.turnRight(turnTime);
-
+                    if (action[0] < 0)
+                        motor.turnLeft(turnTime);
+                    else
+                        motor.turnRight(turnTime);
+                } else {
+                    if (Camara.isFound()) {
+                        int direccion_giro = Camara.getGoalPosition();
+                        long turnTime = 200;
+                        if (direccion_giro > 0) {
+                            motor.turnRight(turnTime);
+                        } else if (direccion_giro < 0) {
+                            motor.turnRight(turnTime);
+                        } else {
+                            motor.avanzar(1f);
+                        }
+                    } else {
+                        motor.avanzar(1f);
+                    }
+                }
+            } else {
+                motor.spinClockwise();
             }
         }
     }
