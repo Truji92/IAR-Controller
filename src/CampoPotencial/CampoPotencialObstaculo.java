@@ -116,6 +116,10 @@ public class CampoPotencialObstaculo {
 
         System.out.println("#### START BARRIDO ####");
         while (!Camara.isFound() && i < NUMERO_GIROS_CAMARA) {
+            try {
+                Thread.sleep(500);
+            } catch (Exception ignored){}
+            
             Camara.captureAndAnalize(true);
 
             System.out.println("Giro "+i+": "+Camara.isFound());
@@ -173,7 +177,7 @@ public class CampoPotencialObstaculo {
                 
                 if(!Camara.isFound() && muestreos%num_muestreos == 0) barrido();
                 
-                boolean shouldTurn = distancias[1] < 15 || distancias[2] < 30 || distancias[3] < 15;
+                boolean shouldTurn = distancias[1] < 18 || distancias[2] < 30 || distancias[3] < 18;
 
                 if (shouldTurn) {
                     motor.stop();

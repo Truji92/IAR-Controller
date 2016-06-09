@@ -27,7 +27,7 @@ public class Camara {
     /**
      * True-> guardar las capturas para debug en el sistema de archivos
      */
-    private static final boolean __saveCaptures = true;
+    private static final boolean __saveCaptures = false;
     private static boolean found = false;
     private static boolean goal_reached = false;
     private static double goal_position;
@@ -156,18 +156,46 @@ public class Camara {
                 // Si el tamaño es suficiente hemos encontrado el objetivo
                 if (area > GOAL_SIZE)
                     goal_reached = true;
-
+                
                 // Debug
                 if (__saveCaptures) {
                     Core.multiply(imgPro, Scalar.all(255), imgPro);
                     Core.circle(imgPro, centroid, 3, new Scalar(0,0,255), 5);
-                    float time = System.currentTimeMillis();
-                    Highgui.imwrite(esBarrido?"bar_":"" + "in_"+time+".jpg", img);
-                    Highgui.imwrite(esBarrido?"bar_":"" + "out_"+time+".jpg", imgPro);
+                    long time = System.currentTimeMillis();
+                    
+                    String n1 = "";
+                    String n2 = "";
+                    
+                    System.out.println("=====================================================");
+                    
+                    if (esBarrido) {
+                        n1 += "bar_";
+                        n2 += "bar_";
+                    }
+                    
+                    n1 += "in_"+time+".jpg";
+                    n2 += "out_"+time+".jpg";
+                    
+                    Highgui.imwrite(n1, img);
+                    Highgui.imwrite(n2, imgPro);
                 }
 
-            }
+            } 
         }
+        // Debug
+                if (__saveCaptures) {
+                    long time = System.currentTimeMillis();
+                    
+                    String n1 = "";
+                                       
+                    if (esBarrido) {
+                        n1 += "bar_";
+                    }
+                    
+                    n1 += "NoObj_in_"+time+".jpg";
+                    
+                    Highgui.imwrite(n1, img);
+                }
     }
 
     /**

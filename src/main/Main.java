@@ -48,7 +48,6 @@ public class Main {
         //Brujula brujula = new Brujula(serial);
         MotorOruga ruedas = new MotorOruga(serial);
         
-       
         CampoPotencialObstaculo campo = new CampoPotencialObstaculo(sensores, ruedas);
         campo.run();
         System.exit(0);
